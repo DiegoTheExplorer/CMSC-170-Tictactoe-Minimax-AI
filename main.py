@@ -66,7 +66,7 @@ def buttonClick(self, gameState, root, frame, turnCount):
 
 #INIT FUNCTIONS
 #creates a 3x3 grid of buttons and assigns buttonClick to be called when a button is clicked
-def initButtons(gameState, root, frame, turnCount):
+def initButtons(gameState, root, frame, turnCount, isPlayerTurn):
 
   for row in range(0,3):
     for col in range(0,3):
@@ -79,6 +79,14 @@ def initButtons(gameState, root, frame, turnCount):
                           height = 5)
         button.grid(row = row, column = col, sticky="nesw")
         button.config(command= partial(buttonClick, button, gameState, root, frame, turnCount))
+
+  if not isPlayerTurn:
+    rRow = random.randint(0,2)
+    rCol = random.randint(0,2)
+    rBtn = frame.grid_slaves(rRow,rCol)
+    rBtn.confic(text=mark,state='disabled')
+    turnCount += 1
+    
   return
 
 #APP START
@@ -94,6 +102,6 @@ turnCount = 1
 isPlayerTurn = random.randint(0,1)
 isPlayerTurn = True if isPlayerTurn == 1 else False
 
-initButtons(gameState,root,frame,turnCount)
+initButtons(gameState,root,frame,turnCount,isPlayerTurn)
 
 root.mainloop()
