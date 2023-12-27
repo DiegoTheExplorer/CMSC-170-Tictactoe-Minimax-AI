@@ -10,6 +10,12 @@ from collections import deque
 import random 
 import numpy as np
 
+#UI FUNCTIONS
+def disableAllBtns(frame):
+  for btn in frame.grid_slaves():
+    btn['state'] = 'disabled'
+  return
+
 #TICTACTOE FUNCTIONS
 def isWinState(gameState):
 
@@ -33,39 +39,40 @@ def buttonClick(self, gameState, root, frame, turnCount):
 
   row = self.grid_info()['row']
   col = self.grid_info()['column']
-  mark = 10 if turnCount % 2 == 0 else 20
+  mark = 'X' if turnCount % 2 == 0 else 'O'
   #10 is 'O" and 20 is 'X'
 
   #Mark current button and set as disabled
-  self.config(textvariable=mark, state='disabled')
-  gameState[row][col] = mark
+  self.config(text=mark, state='disabled')
+  gameState[row][col] = 10 if mark == 'O' else 20
   turnCount += 1
 
   #Check if winstate
   if isWinState(gameState):
     print("PLAYER WINS")
+    disableAllBtns(frame)
     return
 
   #Put minimax ai 
-  mark = "O" if turnCount % 2 == 0 else "X"
+  mark = "X" if turnCount % 2 == 0 else "O"
   print("ai turn")
 
-  turnDone = False
+  turnDone = True
   while turnDone:
     rRow = random.randint(0,2)
     rCol = random.randint(0,2)
     rBtn = frame.grid_slaves(rRow,rCol)
-    print(rBtn)
-    if rBtn.menu.cget('status') == 'enabled':
-      rBtn.config(textvariable=mark,state='disabled')
-      gameState[rRow][rCol] = mark
-      turnDone = True
+    if rBtn[0]['state'] == 'normal':
+      rBtn[0].config(text=mark,state='disabled')
+      gameState[rRow][rCol] = 10 if mark == 'O' else 20
+      turnDone = False
       
   turnCount += 1
 
   #Check if winstate
   if isWinState(gameState):
     print("COMPUTER WINS")
+    disableAllBtns(frame)
     return
 
   turnCount += 1
@@ -78,7 +85,7 @@ def initButtons(gameState, root, frame, turnCount, isPlayerTurn):
   for row in range(0,3):
     for col in range(0,3):
         button = tk.Button(frame,
-                          textvariable=tk.StringVar(""), 
+                          text="", 
                           fg="black", 
                           bg="blue", 
                           font="Helvetica",
@@ -87,12 +94,12 @@ def initButtons(gameState, root, frame, turnCount, isPlayerTurn):
         button.grid(row = row, column = col, sticky="nesw")
         button.config(command= partial(buttonClick, button, gameState, root, frame, turnCount))
 
+  #AI does a random move when AI goes first
   if not isPlayerTurn:
     rRow = random.randint(0,2)
     rCol = random.randint(0,2)
     rBtn = frame.grid_slaves(rRow,rCol)
-    print(rBtn)
-    rBtn.config(text="X",state='disabled')
+    rBtn[0].config(text="X",state='disabled')
     gameState[rRow][rCol] = 20
     turnCount += 1
 
