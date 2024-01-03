@@ -3,47 +3,21 @@ import tkinter as tk
 import tkinter.messagebox as message
 import tkinter.filedialog as filedialog
 
-#other imports
+#Other imports
 from functools import partial
 from copy import deepcopy
 from collections import deque
 import random 
 import numpy as np
 
+#User imports
+from tttAI import *
+
 #UI FUNCTIONS
 def disableAllBtns(frame):
   for btn in frame.grid_slaves():
     btn['state'] = 'disabled'
   return
-
-#TICTACTOE FUNCTIONS
-def isEndState(gameState):
-
-  #Checking rows and columns for a win
-  for i in range(0,3):
-    rChk = set(gameState[i])
-    cChk = set(gameState[:,i])
-
-    if ((len(rChk) == 1 or len(cChk) == 1)):
-      return 1
-  
-  #Checking diagonals for a win
-    diag1 = set([gameState[0,0],gameState[1,1],gameState[2,2]])
-    diag2 = set([gameState[0,2],gameState[1,1],gameState[2,0]])
-
-    if (len(set(diag1)) == 1 or len(set(diag2)) == 1):
-      return 1
-  
-  #Checking for a draw
-    drawStateSet = {0,1}
-    gameStateSet = set()
-    for i in range(0,3):
-      for j in range(0,3):
-        gameStateSet.add(gameState[i,j])
-    if(drawStateSet == gameStateSet):
-      return 2
-    
-  return 0
 
 def buttonClick(self, gameState, root, frame, turnCount):
 
@@ -69,20 +43,31 @@ def buttonClick(self, gameState, root, frame, turnCount):
     return
 
   #Put minimax ai 
-  mark = "X" if turnCount % 2 == 0 else "O"
   print("ai turn")
-
-  turnDone = True
-  while turnDone:
-    rRow = random.randint(0,2)
-    rCol = random.randint(0,2)
-    rBtn = frame.grid_slaves(rRow,rCol)
-    if rBtn[0]['state'] == 'normal':
-      rBtn[0].config(text=mark,state='disabled')
-      gameState[rRow][rCol] = 0 if mark == 'O' else 1
-      turnDone = False
-      
-  turnCount += 1
+  mark = "X" if turnCount % 2 == 0 else "O"
+  val = 0 if mark == 'O' else 1
+  inv = 1 if val == 0 else 0
+  print("*********************************************************************************")
+  actionList = possibleActionsWithInd(gameState,val)
+  for action in actionList:
+    print(action)
+    action[0] = minimax(action[0],False,inv)
+    print(action)
+  
+  aiMove = max(actionList,key=lambda x:x[0])
+  gameState[aiMove[1]][aiMove[2]] = val
+  currBtn = frame.grid_slaves(aiMove[1],aiMove[2])
+  currBtn[0].config(text=mark,state='disabled')
+  # turnDone = True
+  # while turnDone:
+  #   rRow = random.randint(0,2)
+  #   rCol = random.randint(0,2)
+  #   rBtn = frame.grid_slaves(rRow,rCol)
+  #   if rBtn[0]['state'] == 'normal':
+  #     rBtn[0].config(text=mark,state='disabled')
+  #     gameState[rRow][rCol] = 0 if mark == 'O' else 1
+  #     turnDone = False
+  # turnCount += 1
 
   #Check if end state
   currState = isEndState(gameState)
