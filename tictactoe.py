@@ -52,10 +52,8 @@ def buttonClick(self, gameState, root, frame):
 
   #Find the minimax evaluation for each move
   invVal = 1 if val == 0 else 0
-  print("Turn Count: ", turnCount, "*****************")
   for move in moves:
     move[2] = minimax(move[2],False,invVal,-2,2)
-    print(move)
 
   #Select the move with the highest minimax evaluation
   bestMove = max(moves, key=lambda x:x[2])
