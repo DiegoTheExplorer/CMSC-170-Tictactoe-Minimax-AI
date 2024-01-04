@@ -40,3 +40,20 @@ gameStates = [
 #     print(moves2[0])
 #     print(moves2[1])
 #     print(moves2[2])
+
+
+# state = [
+#   [1,0,4],
+#   [0,0,1],
+#   [1,1,5]
+# ]
+# print(minimax(state, False, 0))
+
+state = [
+  [1,0,0],
+  [0,0,1],
+  [1,1,1]
+]
+
+print(isEndState(state))
+

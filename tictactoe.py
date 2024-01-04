@@ -49,8 +49,10 @@ def buttonClick(self, gameState, root, frame):
 
   #Find the minimax evaluation for each move
   invVal = 1 if val == 0 else 0
+  print("Turn Count: ", turnCount, "*****************")
   for move in moves:
     move[2] = minimax(move[2],False,invVal)
+    print(move)
 
   #Select the move with the highest minimax evaluation
   bestMove = max(moves, key=lambda x:x[2])
@@ -79,8 +81,10 @@ def buttonClick(self, gameState, root, frame):
 
 #INIT FUNCTIONS
 #creates a 3x3 grid of buttons and assigns buttonClick to be called when a button is clicked
-def initButtons(gameState, root, frame, isPlayerTurn):
+def initButtons(gameState, root, frame):
   global turnCount
+  isPlayerTurn = random.randint(0,1)
+  isPlayerTurn = True if isPlayerTurn == 1 else False
   for row in range(0,3):
     for col in range(0,3):
         button = tk.Button(frame,
@@ -114,9 +118,7 @@ frame.grid(columnspan = 3, rowspan = 3)
 gameState = [[4,5,6],
             [7,8,9],
             [10,11,12]]
-isPlayerTurn = random.randint(0,1)
-isPlayerTurn = True if isPlayerTurn == 1 else False
 
-initButtons(gameState,root,frame,isPlayerTurn,)
+initButtons(gameState,root,frame)
 
 root.mainloop()
