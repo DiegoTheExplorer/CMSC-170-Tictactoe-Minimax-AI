@@ -59,7 +59,7 @@ def possibleMoves(gameState,val):
         retList.append(newState)
   return retList
 
-def minimax(gameState,maximizer,val):
+def minimax(gameState,maximizer,val,alpha,beta):
   gameStatus = isEndState(gameState)
   if(gameStatus == 1): #game has a winner
     eval = -1 if maximizer else 1
@@ -76,14 +76,20 @@ def minimax(gameState,maximizer,val):
     if(maximizer):
       maxEval = -2
       for move in moveList:
-        eval = minimax(move,False,val)
+        eval = minimax(move,False,val,alpha,beta)
         maxEval = max(maxEval,eval)
+        alpha = max(alpha,eval)
+        if (beta <= alpha):
+          break
       return maxEval
 
     #if minimizer's turn
     else:
       minEval = 2
       for move in moveList:
-        eval = minimax(move,True,val)
+        eval = minimax(move,True,val,alpha,beta)
         minEval = min(minEval,eval)
+        beta = min(beta,eval)
+        if (beta <= alpha):
+          break
       return minEval
