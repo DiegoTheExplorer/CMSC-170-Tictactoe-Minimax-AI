@@ -1,6 +1,7 @@
 #Tkinter imports
 import tkinter as tk
 import tkinter.messagebox as message
+import tkinter.font as font
 
 #External library imports
 from functools import partial
@@ -90,14 +91,16 @@ def initButtons(gameState, root, frame):
   #Randomly decide if Player or AI goes first
   isPlayerTurn = random.randint(0,1)
   isPlayerTurn = True if isPlayerTurn == 1 else False
-  
+
+  btnFont = font.Font(family='Helvetica', size=26, weight='bold')
+
   for row in range(0,3):
     for col in range(0,3):
         button = tk.Button(frame,
                           text="", 
-                          fg="black", 
+                          fg="white", 
                           bg="blue", 
-                          font="Helvetica",
+                          font=btnFont,
                           width = 10, 
                           height = 5)
         button.grid(row = row, column = col, sticky="nesw")
