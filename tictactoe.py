@@ -2,9 +2,12 @@
 import tkinter as tk
 import tkinter.messagebox as message
 
-#Other imports
+#External library imports
 from functools import partial
 import random 
+
+#Custom imports
+from minimax import *
 
 #Global Variables
 turnCount = 1
@@ -14,39 +17,6 @@ def disableAllBtns(frame):
   for btn in frame.grid_slaves():
     btn['state'] = 'disabled'
   return
-
-# Checks if the game is done at the current state
-# 0 if game is not over
-# 1 if X wins
-# 2 if O wins
-# 3 if the game is a draw
-def isEndState(gameState):
-
-  #Checking rows and columns for a win
-  for i in range(0,3):
-    rChk = set([gameState[i][0],gameState[i][1],gameState[i][2]])
-    cChk = set([gameState[0][i],gameState[1][i],gameState[2][i]])
-
-    if (len(rChk) == 1 or len(cChk) == 1):
-      return 1
-  
-  #Checking diagonals for a win
-    diag1 = set([gameState[0][0],gameState[1][1],gameState[2][2]])
-    diag2 = set([gameState[0][2],gameState[1][1],gameState[2][0]])
-
-    if (len((diag1)) == 1 or len((diag2)) == 1):
-      return 1
-  
-  #Checking for a draw
-    drawStateSet = {0,1}
-    gameStateSet = set()
-    for i in range(0,3):
-      for j in range(0,3):
-        gameStateSet.add(gameState[i][j])
-    if(drawStateSet == gameStateSet):
-      return 2
-    
-  return 0
 
 def buttonClick(self, gameState, root, frame):
   global turnCount
@@ -65,10 +35,47 @@ def buttonClick(self, gameState, root, frame):
     print("PLAYER WINS")
     disableAllBtns(frame)
     return
-  elif currState == 3:
+  elif currState == 2:
     print("GAME DRAW")
     disableAllBtns(frame)
     return
+
+  #AI minimax start
+  mark = 'O' if turnCount % 2 == 0 else 'X'
+  val = 0 if mark == 'O' else 1
+
+  #Generate all possible moves for the AI
+  moves = possibleMovesWithInd(gameState, val)
+
+  #Find the minimax evaluation for each move
+  invVal = 1 if val == 0 else 0
+  for move in moves:
+    move[2] = minimax(move[2],False,invVal)
+
+  #Select the move with the highest minimax evaluation
+  bestMove = max(moves, key=lambda x:x[2])
+  #AI minimax end
+
+  #apply the move decided by the minimax AI
+  bmRow = bestMove[0]
+  bmCol = bestMove[1]
+  gameState[bmRow][bmCol] = val #update gameState
+
+  moveBtn = frame.grid_slaves(bestMove[0],bestMove[1])#update the ui
+  moveBtn[0].config(text=mark,state='disabled')
+
+  #Check if end state
+  currState = isEndState(gameState)
+  if currState == 1:
+    print("COMPUTER WINS")
+    disableAllBtns(frame)
+    return
+  elif currState == 2:
+    print("GAME DRAW")
+    disableAllBtns(frame)
+    return
+
+  turnCount += 1
 
 #INIT FUNCTIONS
 #creates a 3x3 grid of buttons and assigns buttonClick to be called when a button is clicked
