@@ -83,8 +83,11 @@ def buttonClick(self, gameState, root, frame):
 #creates a 3x3 grid of buttons and assigns buttonClick to be called when a button is clicked
 def initButtons(gameState, root, frame):
   global turnCount
+
+  #Randomly decide if Player or AI goes first
   isPlayerTurn = random.randint(0,1)
   isPlayerTurn = True if isPlayerTurn == 1 else False
+
   for row in range(0,3):
     for col in range(0,3):
         button = tk.Button(frame,
