@@ -90,7 +90,7 @@ def initButtons(gameState, root, frame):
   #Randomly decide if Player or AI goes first
   isPlayerTurn = random.randint(0,1)
   isPlayerTurn = True if isPlayerTurn == 1 else False
-
+  
   for row in range(0,3):
     for col in range(0,3):
         button = tk.Button(frame,
