@@ -62,8 +62,8 @@ def possibleMoves(gameState,val):
 def minimax(gameState,maximizer,val,alpha,beta):
   gameStatus = isEndState(gameState)
   if(gameStatus == 1): #game has a winner
-    eval = -1 if maximizer else 1
-    return eval
+    score = -1 if maximizer else 1
+    return score
   elif(gameStatus == 2): #game is a draw
     return 0
   else:
@@ -74,22 +74,22 @@ def minimax(gameState,maximizer,val,alpha,beta):
     val = 1 if val == 0 else 0
     #if maximizer's turn
     if(maximizer):
-      maxEval = -2
+      maxScore = -2
       for move in moveList:
-        eval = minimax(move,False,val,alpha,beta)
-        maxEval = max(maxEval,eval)
-        alpha = max(alpha,eval)
+        score = minimax(move,False,val,alpha,beta)
+        maxScore = max(maxScore,score)
+        alpha = max(alpha,score)
         if (beta <= alpha):
           break
-      return maxEval
+      return maxScore
 
     #if minimizer's turn
     else:
-      minEval = 2
+      minScore = 2
       for move in moveList:
-        eval = minimax(move,True,val,alpha,beta)
-        minEval = min(minEval,eval)
-        beta = min(beta,eval)
+        score = minimax(move,True,val,alpha,beta)
+        minScore = min(minScore,score)
+        beta = min(beta,score)
         if (beta <= alpha):
           break
-      return minEval
+      return minScore
