@@ -15,7 +15,8 @@ turnCount = 1
 #UI FUNCTIONS
 def disableAllBtns(frame):
   for btn in frame.grid_slaves():
-    btn['state'] = 'disabled'
+    if (btn['text'] != 'Restart'):
+      btn['state'] = 'disabled'
   return
 
 def buttonClick(self, gameState, root, frame):
@@ -33,10 +34,12 @@ def buttonClick(self, gameState, root, frame):
   currState = isEndState(gameState)
   if currState == 1:
     print("PLAYER WINS")
+    message.showinfo("Game Over","You won! ※\(^o^)/※")
     disableAllBtns(frame)
     return
   elif currState == 2:
     print("GAME DRAW")
+    message.showinfo("Game Over","The Game was a draw ¯\(°_o)/¯")
     disableAllBtns(frame)
     return
 
@@ -70,10 +73,12 @@ def buttonClick(self, gameState, root, frame):
   currState = isEndState(gameState)
   if currState == 1:
     print("COMPUTER WINS")
+    message.showinfo("Game Over","The Computer won ( ╥﹏╥) ノシ")
     disableAllBtns(frame)
     return
   elif currState == 2:
     print("GAME DRAW")
+    message.showinfo("Game Over","The Game was a draw ¯\(°_o)/¯")
     disableAllBtns(frame)
     return
 
@@ -109,18 +114,30 @@ def initButtons(gameState, root, frame):
     gameState[rRow][rCol] = 1
     turnCount = turnCount + 1
 
+def restartGame(gameState,root,frame):
+  global turnCount
+  turnCount = 1
+  gameState = [[4,5,6],
+            [7,8,9],
+            [10,11,12]]
+  initButtons(gameState,root,frame)
 
 #APP START
 root = tk.Tk()
 root.title("Tictactoe")
 root.resizable(False,False)
-frame = tk.Frame(root, width = 600, height = 600)
-frame.grid(columnspan = 3, rowspan = 3)
+frame = tk.Frame(root, width = 600, height = 700)
+frame.grid(columnspan = 4, rowspan = 3)
+restartBtn = tk.Button(frame,
+                      text="Restart")
+restartBtn.grid(row = 3, column = 0, sticky="nesw")
+
 
 #Tictactoe Variables
 gameState = [[4,5,6],
             [7,8,9],
             [10,11,12]]
+restartBtn.config(comman=partial(restartGame,gameState,root,frame))
 
 initButtons(gameState,root,frame)
 
